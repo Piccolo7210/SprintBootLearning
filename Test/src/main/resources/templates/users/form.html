@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title th:text="${mode == 'create' ? 'Create User' : 'User Details'}">User Form</title></head>
+<body>
+<h1 th:text="${mode == 'create' ? 'Create New User' : 'User Details'}"></h1>
+<div th:if="${error}" th:text="${error}" style="color:red;"></div>
+<form th:action="@{/users}" th:object="${user}" method="post" th:if="${mode == 'create'}">
+    <input type="hidden" th:field="*{id}" />
+    <label>Name: <input type="text" th:field="*{name}" /></label><br/>
+    <label>Email: <input type="text" th:field="*{email}" /></label><br/>
+    <button type="submit">Save</button>
+</form>
+<div th:if="${mode == 'view'}">
+    <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <a th:href="@{/users}">Back to List</a>
+</div>
+</body>
+</html>
