@@ -1,8 +1,8 @@
 package com.example.Test.Controller;
 
 
-import com.example.Test.User;
-import com.example.Test.UserService;
+import com.example.Test.Models.User;
+import com.example.Test.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +41,19 @@ public class UserController {
         model.addAttribute("user", new User());
         model.addAttribute("mode", "create");
         return "users/form";
+    }
+
+    // Edit User – Show form with user data for editing
+    @GetMapping("/{id}/edit")
+    public String editUser(@PathVariable String id, Model model) {
+        userService.getUserById(id).ifPresentOrElse(
+                user -> {
+                    model.addAttribute("user", user);
+                    model.addAttribute("mode", "edit");
+                },
+                () -> model.addAttribute("error", "User not found")
+        );
+        return "users/form";  // Reuse form for edit
     }
 
     // Save User (Create or Update)
