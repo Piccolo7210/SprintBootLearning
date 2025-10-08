@@ -1,7 +1,7 @@
 package com.example.Test.Controller;
 
-import com.example.Test.User;
-import com.example.Test.UserService;
+import com.example.Test.Models.User;
+import com.example.Test.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
