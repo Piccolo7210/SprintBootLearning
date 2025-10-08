@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,6 +78,7 @@ public class StudentJPQLService {
         frank.setDateOfBirth(LocalDate.of(2001, 9, 18));
         frank.setStatus(Student.StudentStatus.ACTIVE);
 
+        // Save students first
         studentRepository.saveAll(Arrays.asList(alice, bob, charlie, diana, eve, frank));
 
         // Create courses
@@ -120,16 +122,20 @@ public class StudentJPQLService {
         database.setStartDate(LocalDate.of(2025, 1, 15));
         database.setEndDate(LocalDate.of(2025, 5, 15));
 
+        // Save courses first without student enrollments
         courseRepository.saveAll(Arrays.asList(dataStructures, calculus, physics101, management, database));
 
-        // Enroll students in courses
-        dataStructures.setEnrolledStudents(Arrays.asList(alice, bob, frank));
-        calculus.setEnrolledStudents(Arrays.asList(alice, bob, charlie, diana));
-        physics101.setEnrolledStudents(Arrays.asList(diana, alice));
-        management.setEnrolledStudents(Arrays.asList(eve));
-        database.setEnrolledStudents(Arrays.asList(alice, frank));
+        // Now handle student enrollments by managing from the Student side (owning side)
+        // Use mutable ArrayLists instead of Arrays.asList() to avoid UnsupportedOperationException
+        alice.setCourses(new ArrayList<>(Arrays.asList(dataStructures, calculus, physics101, database)));
+        bob.setCourses(new ArrayList<>(Arrays.asList(dataStructures, calculus)));
+        charlie.setCourses(new ArrayList<>(Arrays.asList(calculus)));
+        diana.setCourses(new ArrayList<>(Arrays.asList(calculus, physics101)));
+        eve.setCourses(new ArrayList<>(Arrays.asList(management)));
+        frank.setCourses(new ArrayList<>(Arrays.asList(dataStructures, database)));
 
-        courseRepository.saveAll(Arrays.asList(dataStructures, calculus, physics101, management, database));
+        // Save students again to persist the course relationships
+        studentRepository.saveAll(Arrays.asList(alice, bob, charlie, diana, eve, frank));
 
         System.out.println("✅ Sample data initialized successfully!");
         System.out.println("📊 Created: 4 Departments, 6 Students, 5 Courses");

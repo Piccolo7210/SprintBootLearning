@@ -42,7 +42,13 @@ public class Student {
     @JoinColumn(name = "department_id")
     private Department department;
     
-    @ManyToMany(mappedBy = "enrolledStudents", fetch = FetchType.LAZY)
+    // Make Student the owning side of the relationship
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "student_courses",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
     private List<Course> courses;
     
     // Enums

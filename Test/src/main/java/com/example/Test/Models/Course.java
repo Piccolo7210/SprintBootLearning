@@ -45,12 +45,8 @@ public class Course {
     @JoinColumn(name = "department_id")
     private Department department;
     
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-        name = "student_courses",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
+    // Make Course the inverse side of the relationship
+    @ManyToMany(mappedBy = "courses")
     private List<Student> enrolledStudents;
     
     // Enums
