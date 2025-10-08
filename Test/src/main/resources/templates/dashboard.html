@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Dashboard</title>
+    <style>
+        /* Very simple CSS for beginners */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .user-list {
+            border: 1px solid #ccc;
+            height: 200px;
+            overflow-y: scroll;
+            margin: 10px 0;
+        }
+
+        .user-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .btn {
+            background: #008CBA;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #007B9A;
+        }
+
+        .nav-links a {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .nav-links a:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Simple Dashboard</h1>
+
+        <div class="nav-links">
+            <a href="/frontend/users">👥 Manage Users</a>
+            <a href="javascript:void(0)" onclick="refreshData()">🔄 Refresh</a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div>Total Users</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="lastUpdated">--</div>
+                <div>Last Updated</div>
+            </div>
+        </div>
+
+        <h3>Recent Users</h3>
+        <div class="user-list" id="userList">
+            <div>Loading users...</div>
+        </div>
+
+        <h3>Quick Actions</h3>
+        <button class="btn" onclick="loadUsers()">Load All Users</button>
+        <button class="btn" onclick="showUserCount()">Show User Count</button>
+    </div>
+
+    <script>
+        // Simple JavaScript - Easy to understand
+        const API_URL = '/api/users';
+
+        // Load page when ready
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsers();
+        });
+
+        // Load users from API
+        function loadUsers() {
+            // Show loading message
+            document.getElementById('userList').innerHTML = '<div class="loading">Loading users...</div>';
+
+            // Fetch users from your REST API
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(users => {
+                    displayUsers(users);
+                    updateStats(users);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('userList').innerHTML = '<div style="color: red;">Error loading users</div>';
+                });
+        }
+
+        // Display users in simple list
+        function displayUsers(users) {
+            const userList = document.getElementById('userList');
+
+            if (users.length === 0) {
+                userList.innerHTML = '<div class="user-item">No users found</div>';
+                return;
+            }
+
+            let html = '';
+            users.forEach(user => {
+                html += `
+                    <div class="user-item">
+                        <div>
+                            <strong>${user.name}</strong><br>
+                            <small>${user.email}</small>
+                        </div>
+                        <div>
+                            <button class="btn" onclick="viewUser('${user.id}')">View</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            userList.innerHTML = html;
+        }
+
+        // Update simple statistics
+        function updateStats(users) {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // View single user
+        function viewUser(userId) {
+            fetch(`${API_URL}/${userId}`)
+                .then(response => response.json())
+                .then(user => {
+                    alert(`User Details:\n\nName: ${user.name}\nEmail: ${user.email}\nID: ${user.id}`);
+                })
+                .catch(error => {
+                    alert('Error loading user details');
+                });
+        }
+
+        // Show user count
+        function showUserCount() {
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(users => {
+                    alert(`Total users in database: ${users.length}`);
+                })
+                .catch(error => {
+                    alert('Error getting user count');
+                });
+        }
+
+        // Refresh all data
+        function refreshData() {
+            loadUsers();
+        }
+    </script>
+</body>
+</html>
+

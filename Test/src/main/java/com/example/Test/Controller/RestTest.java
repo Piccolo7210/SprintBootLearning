@@ -15,14 +15,11 @@ import java.util.Optional;
 public class RestTest {
     @Autowired
     private UserService userService;
-
-    // GET all users
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // GET user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
         Optional<User> user = userService.getUserById(id);
@@ -36,14 +33,12 @@ public class RestTest {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // PUT update user (full update)
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User user) {
         Optional<User> updated = userService.updateUser(id, user);
         return updated.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // PATCH partial update (e.g., just email)
     @PatchMapping("/{id}")
     public ResponseEntity<User> patchUser(@PathVariable String id, @RequestBody User user) {
         Optional<User> patched = userService.patchUser(id, user);
