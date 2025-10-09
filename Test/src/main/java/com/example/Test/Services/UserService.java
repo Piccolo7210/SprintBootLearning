@@ -26,16 +26,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Create a new user
+
     public User createUser(User user) {
-        // Generate ID if not provided
         if (user.getId() == null || user.getId().isEmpty()) {
             user.setId(UUID.randomUUID().toString());
         }
         return userRepository.save(user);
     }
 
-    // Update user (full update)
     public Optional<User> updateUser(String id, User userDetails) {
         return userRepository.findById(id).map(user -> {
             user.setName(userDetails.getName());
@@ -44,7 +42,6 @@ public class UserService {
         });
     }
 
-    // Patch user (partial update)
     public Optional<User> patchUser(String id, User userDetails) {
         return userRepository.findById(id).map(user -> {
             // Only update fields that are not null
@@ -58,7 +55,6 @@ public class UserService {
         });
     }
 
-    // Delete user and return boolean indicating success
     public boolean deleteUser(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

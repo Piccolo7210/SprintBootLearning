@@ -26,7 +26,6 @@ public class RestTest {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // POST create new user
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User created = userService.createUser(user);
@@ -45,7 +44,6 @@ public class RestTest {
         return patched.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // DELETE user by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         boolean deleted = userService.deleteUser(id);
