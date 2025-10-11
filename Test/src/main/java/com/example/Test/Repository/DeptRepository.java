@@ -1,9 +1,0 @@
-package com.example.Test.Repository;
-import com.example.Test.Models.dept;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface DeptRepository extends JpaRepository<dept,Long> {
-
-}

@@ -1,8 +1,10 @@
 package com.example.Test.Models;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "courses")
@@ -10,30 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"department", "enrolledStudents"})
-@EqualsAndHashCode(exclude = {"department", "enrolledStudents"})
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "courseid")
     private Long courseId;
 
-    @Column(name = "coursename", nullable = false)
+    @Column(nullable = false)
     private String courseName;
 
-    @Column(name = "credits")
+    @Column(nullable = false)
     private Integer credits;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @ManyToMany(mappedBy = "courses")
-    private List<Student> enrolledStudents;
-    
-    // Custom constructor for basic fields
-    public Course(String courseName, Integer credits) {
-        this.courseName = courseName;
-        this.credits = credits;
-    }
+    @Column
+    private Long deptId;
 }

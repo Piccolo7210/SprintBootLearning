@@ -8,13 +8,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/frontend")
 public class FrontendController {
     
-    @GetMapping("/users")
-    public String usersPage() {
-        return "users/interactive";
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/frontend/dashboard";
     }
-    
+
     @GetMapping("/dashboard")
-    public String dashboardPage() {
+    public String dashboard() {
         return "dashboard";
+    }
+
+    @GetMapping("/management")
+    public String management() {
+        return "management";
+    }
+
+    @GetMapping("/statistics")
+    public String statistics() {
+        return "statistics";
     }
 }

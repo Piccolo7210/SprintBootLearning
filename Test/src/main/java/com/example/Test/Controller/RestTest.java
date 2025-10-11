@@ -53,4 +53,9 @@ public class RestTest {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/test")
+    public ResponseEntity<?> getUsers() {
+        List <String> users = List.of("Alice", "Bob", "Charlie");
+        return ResponseEntity.ok(users);
+    }
 }

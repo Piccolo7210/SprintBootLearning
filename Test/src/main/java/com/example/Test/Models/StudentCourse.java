@@ -13,9 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class StudentCourse {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "studentid", nullable = false)
     private Long studentId;
-
     @Column(name = "courseid", nullable = false)
     private Long courseId;
 }
