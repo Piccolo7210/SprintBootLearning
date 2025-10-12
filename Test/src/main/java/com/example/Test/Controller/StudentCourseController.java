@@ -1,6 +1,7 @@
 package com.example.Test.Controller;
 
 import com.example.Test.Models.Course;
+import com.example.Test.Models.Student;
 import com.example.Test.Models.StudentCourse;
 import com.example.Test.Repository.StudentCourseRepository;
 import com.example.Test.Repository.StudentRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/studentcourse")
@@ -48,16 +50,16 @@ public class StudentCourseController {
     public List<StudentCourse> getStudentsByCourse(@PathVariable Long courseId) {
         return studentCourseService.getStudentsByCourse(courseId);
     }
-//    @GetMapping("/courses/{studentId}")
-//    public ResponseEntity<?> getCoursesByStudentId(@PathVariable Long studentId) {
-//        System.out.println("Request received for studentId: " + studentId);
-//        try{
+    @GetMapping("/courses/{studentId}")
+    public ResponseEntity<?> getCoursesByStudentId(@PathVariable Long studentId) {
+        System.out.println("Request received for studentId: " + studentId);
+        try{
 //            Long id = studentId;
-//            return ResponseEntity.ok(studentCourseService.getCoursesByStudentId(id));
-//        } catch (Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+            return ResponseEntity.ok(studentCourseService.getCoursesByStudentId(studentId));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<StudentCourse>> getAllEnrollments() {
@@ -110,5 +112,14 @@ public class StudentCourseController {
             return ResponseEntity.status(500).build();
         }
     }
+    @GetMapping("CourseMoreThan/{n}")
+    public ResponseEntity<?> getCoursesWithMoreThanNStudents(@PathVariable Long n) {
+        try {
 
+            Optional<Map<Student,Long>>filteredCourses = studentCourseService.getStudentsHavingCoursesMoreThan( n);
+            return ResponseEntity.ok(filteredCourses);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 }

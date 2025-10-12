@@ -1,6 +1,7 @@
 package com.example.Test.Services;
 
 import com.example.Test.Models.Course;
+import com.example.Test.Models.Student;
 import com.example.Test.Models.StudentCourse;
 import com.example.Test.Services.CourseService;
 import com.example.Test.Services.StudentService;
@@ -50,15 +51,15 @@ public class StudentCourseService {
     public List<StudentCourse> getStudentsByCourse(Long courseId) {
         return studentCourseRepository.findByCourseId(courseId);
     }
-//    public Optional<List<Course>> getCoursesByStudentId(Long studentId) {
-//        List<Course> courseList = new ArrayList<>();
-//        List<Long> courseIds = studentCourseRepository.findByStudentId(studentId);
-//        for (Long courseId : courseIds) {
-//            Optional<Course> course = courseService.findCrsById(courseId);
-//            courseList.add(course.orElse(null));
-//        }
-//        return Optional.of(courseList);
-//    }
+    public Optional<List<Course>> getCoursesByStudentId(Long studentId) {
+        List<Course> courseList = new ArrayList<>();
+        List<StudentCourse> obj = studentCourseRepository.findByStudentId(studentId);
+        for (StudentCourse o : obj) {
+            Optional<Course> course = courseService.findCrsById(o.getCourseId());
+            courseList.add(course.orElse(null));
+        }
+        return Optional.of(courseList);
+    }
 
 
     public List<StudentCourse> getAllEnrollments() {
@@ -83,5 +84,25 @@ public class StudentCourseService {
         }
 
         return groupedResults;
+    }
+    public Optional<Map<Student,Long>> getStudentsHavingCoursesMoreThan(Long numberOfCourses) {
+        List<Student> allStudents = studentService.findAllStudents();
+        Map<Student,Long> studentToCourseCount   = new LinkedHashMap<>();
+        List<StudentCourse> list = studentCourseRepository.findAll();
+
+        for (StudentCourse  o: list) {
+            Student student = studentService.findStuById(o.getStudentId()).orElse(null);
+            if (student != null) {
+                studentToCourseCount.put(student, studentToCourseCount.getOrDefault(student, 0L) + 1);
+            }
+        }
+        Map<Student,Long> filteredStudents = new LinkedHashMap<>();
+        for (Map.Entry<Student, Long> entry : studentToCourseCount.entrySet()) {
+            if (entry.getValue() > numberOfCourses) {
+                filteredStudents.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return Optional.of(filteredStudents);
     }
 }

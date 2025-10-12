@@ -33,11 +33,12 @@ public class StudentController {
     public ResponseEntity<Student> getStuById(@PathVariable Long id) {
         Optional<Student> student = studentService.findStuById(id);
         return student.map(ResponseEntity::ok)
-                     .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
+
     @GetMapping("/deptName/{dept_id}")
     public ResponseEntity<?> getDepartmentName(@PathVariable Long dept_id) {
-        try{
+        try {
             Long id = dept_id;
             return ResponseEntity.ok(studentService.findDepartNameById(id));
         } catch (Exception e) {
@@ -54,9 +55,10 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping("/higherCgpa")
     public ResponseEntity<?> getHigherCgpa(@RequestBody Map<String, Double> request) {
-        try{
+        try {
             Double cgpa = request.get("cgpa");
             return ResponseEntity.ok(studentService.findByCgpaHigherThan(cgpa));
         } catch (Exception e) {
@@ -73,6 +75,7 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/listByDept")
     public ResponseEntity<?> getStudentsByDepartment() {
         try {
@@ -83,4 +86,31 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/countByDept")
+    public ResponseEntity<?> getStudentCountByDept() {
+        try {
+            Map<String, Long> map = studentService.getStudentCountByDept();
+            return ResponseEntity.ok(map);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+    @GetMapping("Top3perDept" )
+    public ResponseEntity<?> getTop3StudentsPerDept() {
+        try {
+            Map<String, List<Student>> map = studentService.Top3StudentsinDepts();
+            return ResponseEntity.ok(map);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+    @GetMapping("Top3")
+    public ResponseEntity<?> getTop3Students() {
+        try {
+            Optional<List<Student>> list = studentService.getTop3Students();
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 }

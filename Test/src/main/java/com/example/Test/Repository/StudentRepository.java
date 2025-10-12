@@ -11,4 +11,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<List<Student>> findByCgpaGreaterThan(Double cgpa);
     Optional<List<Student>> findStudentsByDeptId(Long deptId);
+    List<Student> findTop3ByDeptIdOrderByCgpaDesc(Long deptId);
+    Optional<List<Student>> findTop3ByOrderByCgpaDesc();
 }

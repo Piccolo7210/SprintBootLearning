@@ -72,21 +72,36 @@ public class StudentService {
         }
         return map;
     }
-    public long getStudentCountByDeptId() {
-        List<Department> departments = departmentService.findAllDepts();
-
-
-        List<List<Student>> list = new ArrayList<>();
-        for(Department d : departments)
+    public Map<String, Long>  getStudentCountByDept() {
+        List<Department> deptartments = departmentService.findAllDepts();
+        List<Student> students = studentRepository.findAll();
+        Map<String, Long> deptIdToStudentCount = new LinkedHashMap<>();
+        for(Department i : deptartments)
         {
-            list.add(studentRepository.findStudentsByDeptId(d.getDeptId()).orElse(null));
-        }// Example department ID
-        long i=0;
-        for(List<Student> l : list)
-        {
-            if(l != null)
-            i += l.size();
+            Long count = 0L;
+            for(Student s: students)
+            {
+                if(s.getDeptId().equals(i.getDeptId()))
+                {
+                    count++;
+                }
+            }
+            deptIdToStudentCount.put(i.getName(), count);
         }
-        return i;
+        return deptIdToStudentCount;
     }
+    public Map<String, List<Student>> Top3StudentsinDepts(){
+        List<Department> deptartments = departmentService.findAllDepts();
+        Map<String, List<Student>> topStudents = new LinkedHashMap<>();
+        for(Department i : deptartments){
+            List<Student> students = studentRepository.findTop3ByDeptIdOrderByCgpaDesc(i.getDeptId());
+            topStudents.put(i.getName(), students);
+        }
+
+        return topStudents;
+    }
+    public Optional<List<Student>>getTop3Students() {
+        return studentRepository.findTop3ByOrderByCgpaDesc();
+    }
+
 }
