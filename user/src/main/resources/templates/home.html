@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            background-color: #dc3545;
+        }
+        .navbar a:hover {
+            background-color: #c82333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .welcome-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .welcome-card h2 {
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>User Dashboard</h1>
+        <div class="user-info">
+            <span>Welcome, User!</span>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" style="
+                    color: white;
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 4px;
+                    background-color: #dc3545;
+                    border: none;
+                    cursor: pointer;
+                ">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h2>🎉 Welcome to Your Dashboard!</h2>
+            <p>Your account has been successfully activated and you're now logged in. This is your personal dashboard where you can manage your account settings and access various features.</p>
+            <p><strong>Status:</strong> <span style="color: #28a745;">✅ Account Activated</span></p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Account Status</h3>
+                <div class="number" style="color: #28a745;">Active</div>
+            </div>
+            <div class="stat-card">
+                <h3>Login Count</h3>
+                <div class="number">1</div>
+            </div>
+            <div class="stat-card">
+                <h3>Profile Completion</h3>
+                <div class="number" style="color: #ffc107;">80%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Security Level</h3>
+                <div class="number" style="color: #17a2b8;">High</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
