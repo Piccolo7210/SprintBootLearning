@@ -47,22 +47,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void resetPasswordRequest(String email) {
-        Users user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        String resetToken = UUID.randomUUID().toString();
-        user.setResetToken(resetToken);
-        userRepository.save(user);
-        sendResetEmail(user);
-    }
 
-    public void resetPassword(String token, String newPassword) {
-        Users user = userRepository.findByResetToken(token)
-                .orElseThrow(() -> new RuntimeException("Invalid reset token"));
-        user.setPassword(passwordEncoder.encode(newPassword));
-        user.setResetToken(null);
-        userRepository.save(user);
-    }
 
     private void sendActivationEmail(Users user) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -75,13 +60,29 @@ public class UserService {
         mailSender.send(message);
     }
 
-    private void sendResetEmail(Users user) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(user.getEmail());
-        message.setSubject("Password Reset");
-        String resetLink = baseUrl + "/reset?token=" + user.getResetToken();
-        message.setText("Click the link to reset your password: " + resetLink);
-        mailSender.send(message);
-
-    }
+//    private void sendResetEmail(Users user) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(user.getEmail());
+//        message.setSubject("Password Reset");
+//        String resetLink = baseUrl + "/reset?token=" + user.getResetToken();
+//        message.setText("Click the link to reset your password: " + resetLink);
+//        mailSender.send(message);
+//
+//    }
+//public void resetPasswordRequest(String email) {
+//    Users user = userRepository.findByEmail(email)
+//            .orElseThrow(() -> new RuntimeException("User not found"));
+//    String resetToken = UUID.randomUUID().toString();
+//    user.setResetToken(resetToken);
+//    userRepository.save(user);
+//    sendResetEmail(user);
+//}
+//
+//    public void resetPassword(String token, String newPassword) {
+//        Users user = userRepository.findByResetToken(token)
+//                .orElseThrow(() -> new RuntimeException("Invalid reset token"));
+//        user.setPassword(passwordEncoder.encode(newPassword));
+//        user.setResetToken(null);
+//        userRepository.save(user);
+//    }
 }
