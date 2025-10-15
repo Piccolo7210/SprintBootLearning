@@ -1,9 +1,12 @@
 package com.example.user.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
+import com.example.user.Service.UserService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +17,13 @@ import java.util.Set;
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    private final UserService userService;
+
+    @Autowired
+    public CustomAuthenticationSuccessHandler(UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
@@ -21,9 +31,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         if (roles.contains("ROLE_ADMIN")) {
-            response.sendRedirect("/admin-home");
+            String email = authentication.getName();
+            Long userId = userService.findByEmail(email).getUserId();
+            response.sendRedirect("/admin/"+userId);
         } else {
-            response.sendRedirect("/home");
+            String email = authentication.getName();
+            Long userId = userService.findByEmail(email).getUserId();
+
+//            String username = userService.findByEmail(email).getName();
+            response.sendRedirect("/" + userId);
         }
     }
 }

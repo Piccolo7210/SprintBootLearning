@@ -8,8 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -22,16 +20,15 @@ public class SecurityConfig {
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/activate", "/reset-password-request", "/reset-password").permitAll()
+                        .requestMatchers(
+                            "/register", "/login", "/activate", "/reset-password-request", "/reset-password",
+                            "/api/auth/register", "/api/auth/activate", "/api/auth/reset-password-request", "/api/auth/reset-password"
+                        ).permitAll()
                         .requestMatchers("/static/**", "/css/**", "/js/**", "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/admin-home", "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

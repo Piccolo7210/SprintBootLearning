@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Home</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${user.name}"></span>!</h1>
+<p>Email: <span th:text="${user.email}"></span></p>
+<p>Role: <span th:text="${user.role}"></span></p>
+<!-- Add more user-specific info as needed -->
+<form th:action="@{/logout}" method="post" style="display: inline;">
+    <button type="submit" style="
+                    color: white;
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 4px;
+                    background-color: #dc3545;
+                    border: none;
+                    cursor: pointer;
+                ">Logout</button>
+</form>
+</body>
+</html>

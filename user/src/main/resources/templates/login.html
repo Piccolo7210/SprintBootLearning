@@ -117,26 +117,42 @@
             <p>Don't have an account? <a href="/register">Register here</a></p>
             <p><a href="#" id="forgotPassword">Forgot Password?</a></p>
         </div>
+        <!-- Fallback form for password reset (for debugging and accessibility) -->
+<!--        <form id="resetPasswordForm" action="/api/auth/reset-password-request" method="post" >-->
+<!--            <input type="email" name="email" placeholder="Enter your email for reset" required />-->
+<!--            <button type="submit">Send Reset Link</button>-->
+<!--        </form>-->
     </div>
 
     <script>
-        document.getElementById('forgotPassword').addEventListener('click', function(e) {
-            e.preventDefault();
-            const email = prompt('Enter your email address:');
-            if (email) {
-                fetch('/api/auth/reset-password-request', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'email=' + encodeURIComponent(email)
-                })
-                .then(response => response.text())
-                .then(data => {
-                    alert('Password reset link sent to your email.');
-                })
-                .catch(error => {
-                    alert('Error sending password reset email.');
+        document.addEventListener('DOMContentLoaded', function() {
+            const forgotPassword = document.getElementById('forgotPassword');
+            if (forgotPassword) {
+                forgotPassword.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Forgot Password clicked');
+                    const email = prompt('Enter your email address:');
+                    if (!email) {
+                        alert('Please enter your email address.');
+                        return;
+                    }
+                    fetch('/api/auth/reset-password-request', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'email=' + encodeURIComponent(email)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Password reset link sent to your email.');
+                        } else {
+                            return response.text().then(text => { throw new Error(text); });
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error sending password reset email: ' + error.message);
+                    });
                 });
             }
         });
